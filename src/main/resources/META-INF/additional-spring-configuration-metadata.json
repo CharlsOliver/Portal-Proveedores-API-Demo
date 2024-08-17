@@ -1,0 +1,22 @@
+{"properties": [
+  {
+    "name": "sap.odata.baseurl",
+    "type": "java.lang.String",
+    "description": "A description for 'sap.odata.baseurl'"
+  },
+  {
+    "name": "sap.odata.client",
+    "type": "java.lang.String",
+    "description": "A description for 'sap.odata.client'"
+  },
+  {
+    "name": "sap.odata.user",
+    "type": "java.lang.String",
+    "description": "A description for 'sap.odata.user'"
+  },
+  {
+    "name": "sap.odata.password",
+    "type": "java.lang.String",
+    "description": "A description for 'sap.odata.password'"
+  }
+]}
