@@ -22,4 +22,10 @@ public class ContabilizacionServiceImpl implements ContabilizacionService {
 		return contabilizacionRepository.contabilizar(oc);
 	}
 
+
+	@Override
+	public String contabilizar(int escenario) {
+		return contabilizacionRepository.contabilizar(escenario);
+	}
+
 }

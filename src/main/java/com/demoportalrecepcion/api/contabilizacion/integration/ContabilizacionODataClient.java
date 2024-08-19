@@ -1,5 +1,7 @@
 package com.demoportalrecepcion.api.contabilizacion.integration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.demoportalrecepcion.api.config.HttpClientConfig;
+import com.demoportalrecepcion.api.contabilizacion.model.ContabilizacionFinancieraResponse;
+import com.demoportalrecepcion.api.contabilizacion.model.ContabilizacionFinancieraResponseWrapper;
 import com.demoportalrecepcion.api.contabilizacion.model.ContabilizacionResponse;
 import com.demoportalrecepcion.api.contabilizacion.model.ContabilizacionResponseWrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,8 +24,10 @@ public class ContabilizacionODataClient {
 
     private final String ZFIODP_PROVEEDOR_PRF_SRV = "/ZFIODP_PROVEEDOR_PRF_SRV";
     private final String endpoint_contabiliza_foc = "/CONTABILIZA_FOCSet?";
+    private final String endpoint_contabiliza_financiera = "/CONTABILIZA_FFINANCIERASet?";
 
     private RestTemplate restTemplate;
+
     
     @Autowired
     private HttpClientConfig httpClientConfig;
@@ -54,4 +60,29 @@ public class ContabilizacionODataClient {
         
         return docSap;
     }
+
+	public String contabilizacionODataCallFinanciero(String body) {
+		
+		String docSap = "";
+    	
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        headers.set("Accept", "application/json");
+        headers.set("X-Requested-With", "X");
+        HttpEntity<String> entity = new HttpEntity<>(body, headers);
+        
+        String url = httpClientConfig.getODATA_BASEURL() + ZFIODP_PROVEEDOR_PRF_SRV + endpoint_contabiliza_financiera;   
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        
+        try {
+            ContabilizacionFinancieraResponseWrapper wrapper = objectMapper.readValue(response.getBody(), ContabilizacionFinancieraResponseWrapper.class);
+            ContabilizacionFinancieraResponse contabilizacionResp = wrapper.getD();
+            docSap = contabilizacionResp.getDocumentoSap();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return docSap;
+	}
 }

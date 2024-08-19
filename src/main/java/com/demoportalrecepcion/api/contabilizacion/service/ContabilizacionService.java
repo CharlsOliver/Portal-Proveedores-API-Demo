@@ -4,4 +4,6 @@ public interface ContabilizacionService {
 	
 	String contabilizar(String oc);
 
+	String contabilizar(int escenario);
+
 }

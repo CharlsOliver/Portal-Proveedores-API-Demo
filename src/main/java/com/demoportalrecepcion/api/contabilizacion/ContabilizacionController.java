@@ -27,13 +27,38 @@ public class ContabilizacionController {
 	}
 	
 	@GetMapping("/{oc}")
-	public ResponseEntity<CustomResponse> getFacturas(@PathVariable String oc){
+	public ResponseEntity<CustomResponse> getContabilizacion(@PathVariable String oc){
 		
 		CustomResponse response;
 		HttpStatus httpStatus = HttpStatus.OK;
 		
 		try {
 			String result = this.contabilizacionService.contabilizar(oc);
+			httpStatus = HttpStatus.OK;
+			response = new CustomResponse();
+			response.setMessage("Factura contabilizada correctamente.");
+			response.setStatus(httpStatus.name());
+			response.setObject(result);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+			response = new CustomResponse();
+			response.setMessage("Error al contabilizar escenario");
+			response.setStatus(httpStatus.name());
+			response.setErrorDescription(e.getMessage());
+		}
+		
+		return new ResponseEntity<CustomResponse>(response, httpStatus);
+	}
+	
+	@GetMapping("/financiera")
+	public ResponseEntity<CustomResponse> getContabilizacion(){
+		
+		CustomResponse response;
+		HttpStatus httpStatus = HttpStatus.OK;
+		
+		try {
+			String result = this.contabilizacionService.contabilizar(1);
 			httpStatus = HttpStatus.OK;
 			response = new CustomResponse();
 			response.setMessage("Factura contabilizada correctamente.");
